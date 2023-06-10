@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\SolusiKerusakan;
+use App\Models\Diagnosa;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class SolusiKerusakanPolicy
+class DiagnosaPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -19,7 +19,7 @@ class SolusiKerusakanPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, SolusiKerusakan $solusiKerusakan): bool
+    public function view(User $user, Diagnosa $diagnosa): bool
     {
         //
     }
@@ -35,7 +35,7 @@ class SolusiKerusakanPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, SolusiKerusakan $solusiKerusakan): bool
+    public function update(User $user, Diagnosa $diagnosa): bool
     {
         //
     }
@@ -43,7 +43,7 @@ class SolusiKerusakanPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, SolusiKerusakan $solusiKerusakan): bool
+    public function delete(User $user, Diagnosa $diagnosa): bool
     {
         //
     }
@@ -51,7 +51,7 @@ class SolusiKerusakanPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, SolusiKerusakan $solusiKerusakan): bool
+    public function restore(User $user, Diagnosa $diagnosa): bool
     {
         //
     }
@@ -59,7 +59,7 @@ class SolusiKerusakanPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, SolusiKerusakan $solusiKerusakan): bool
+    public function forceDelete(User $user, Diagnosa $diagnosa): bool
     {
         //
     }

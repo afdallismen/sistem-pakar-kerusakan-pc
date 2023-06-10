@@ -5,6 +5,10 @@ import {
   DateField,
   Show,
   SimpleShowLayout,
+  Create,
+  SimpleForm,
+  TextInput,
+  Edit,
 } from 'react-admin'
 
 export const GejalaList = () => (
@@ -31,4 +35,22 @@ export const GejalaShow = () => (
       />
     </SimpleShowLayout>
   </Show>
+)
+
+export const GejalaCreate = () => (
+  <Create>
+    <SimpleForm>
+      <TextInput source="kode" />
+      <TextInput source="nama" />
+    </SimpleForm>
+  </Create>
+)
+
+export const GejalaEdit = () => (
+  <Edit>
+    <SimpleForm>
+      <TextInput source="kode" />
+      <TextInput source="nama" />
+    </SimpleForm>
+  </Edit>
 )

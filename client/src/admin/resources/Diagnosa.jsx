@@ -1,35 +1,51 @@
 import {
   List,
   Datagrid,
-  TextField,
   DateField,
   Show,
   SimpleShowLayout,
   ReferenceField,
+  NumberField,
 } from 'react-admin'
 
-export const SolusiKerusakanList = () => (
+export const DiagnosaList = () => (
   <List>
     <Datagrid rowClick="show">
+      <ReferenceField
+        source="konsultasi_id"
+        reference="konsultasi"
+        link="show"
+      />
       <ReferenceField
         source="kerusakan_id"
         reference="kerusakan"
         link="show"
       />
-      <TextField source="deskripsi" />
+      <NumberField
+        source="cf"
+        options={{ maximumFractionDigits: 2 }}
+      />
     </Datagrid>
   </List>
 )
 
-export const SolusiKerusakanShow = () => (
+export const DiagnosaShow = () => (
   <Show>
     <SimpleShowLayout>
+      <ReferenceField
+        source="konsultasi_id"
+        reference="konsultasi"
+        link="show"
+      />
       <ReferenceField
         source="kerusakan_id"
         reference="kerusakan"
         link="show"
       />
-      <TextField source="deskripsi" />
+      <NumberField
+        source="cf"
+        options={{ maximumFractionDigits: 2 }}
+      />
       <DateField
         source="created_at"
         showTime

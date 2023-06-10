@@ -24,6 +24,7 @@ const Home = () => {
       </Typography>
       {!user && (
         <Stack
+          direction="row"
           justifyContent="center"
           alignItems="center"
         >
@@ -33,10 +34,22 @@ const Home = () => {
             to="/registrasi"
             component={Link}
             sx={{
+              fontWeight: 700,
+              marginRight: 1,
+            }}
+          >
+            PELANGGAN
+          </Button>
+          <Button
+            type="link"
+            variant="contained"
+            to="/admin/login"
+            component={Link}
+            sx={{
               fontWeight: 700
             }}
           >
-            REGISTRASI
+            ADMIN
           </Button>
         </Stack>
       )}

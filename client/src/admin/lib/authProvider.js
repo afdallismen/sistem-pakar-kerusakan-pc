@@ -1,12 +1,9 @@
 import { instance as axios } from './axios'
 
 const authProvider = {
-  login: async ({ username, password }) => {
+  login: async (payload) => {
     try {
-      const auth = await axios.post('/login', {
-        email: username,
-        password
-      })
+      const auth = await axios.post('/login', payload)
       localStorage.setItem('auth', JSON.stringify(auth.data))
       return Promise.resolve()
     } catch (error) {

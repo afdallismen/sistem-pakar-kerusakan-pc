@@ -14,18 +14,6 @@ return new class extends Migration
         Schema::create('konsultasis', function (Blueprint $table) {
             $table->id();
             $table->text('deskripsi');
-            $table
-                ->float('cf', 1, 2)
-                ->default(0);
-            $table
-                ->unsignedBigInteger('kerusakan_id')
-                ->nullable();
-            $table
-                ->foreign('kerusakan_id')
-                ->references('id')
-                ->on('kerusakans')
-                ->onUpdate('cascade')
-                ->onDelete('set null');
             $table->timestamps();
         });
     }

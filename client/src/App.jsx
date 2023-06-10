@@ -12,9 +12,10 @@ import Registrasi from './front/Registrasi'
 import Home from './front/Home'
 import Profil from './front/Profil'
 import TambahKonsultasi from './front/TambahKonsultasi'
-import DetailKonsultasi from './front/DetailKonsultasi'
-
+import DetailDiagnosa from './front/DetailDiagnosa'
 import { instance as axios } from './admin/lib/axios'
+import PrintDiagnosa from './front/PrintDiagnosa'
+
 
 const App = () => {
   useEffect(() => {
@@ -28,10 +29,11 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/konsultasi/:konsultasi_id/diagnosa/:diagnosa_id/print" element={<PrintDiagnosa />} />
         <Route exact path="/" element={<Front />}>
           <Route index element={<Home />} />
           <Route path="konsultasi" element={<Konsultasi />} />
-          <Route path="konsultasi/:konsultasi_id" element={<DetailKonsultasi />} />
+          <Route path="konsultasi/:konsultasi_id/diagnosa/:diagnosa_id" element={<DetailDiagnosa />} />
           <Route path="tambah-konsultasi" element={<TambahKonsultasi />} />
           <Route path="registrasi" element={<Registrasi />} />
           <Route path="profil" element={<Profil />} />

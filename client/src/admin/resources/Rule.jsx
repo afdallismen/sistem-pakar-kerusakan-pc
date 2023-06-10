@@ -7,6 +7,12 @@ import {
   SimpleShowLayout,
   ReferenceField,
   NumberField,
+  Create,
+  SimpleForm,
+  TextInput,
+  ReferenceInput,
+  NumberInput,
+  Edit,
 } from 'react-admin'
 
 export const RuleList = () => (
@@ -25,11 +31,11 @@ export const RuleList = () => (
       />
       <NumberField
         source="mb"
-        options={{ maximumFractionDigits: 1 }}
+        options={{ maximumFractionDigits: 2 }}
       />
       <NumberField
         source="md"
-        options={{ maximumFractionDigits: 1 }}
+        options={{ maximumFractionDigits: 2 }}
       />
     </Datagrid>
   </List>
@@ -51,11 +57,11 @@ export const RuleShow = () => (
       />
       <NumberField
         source="mb"
-        options={{ maximumFractionDigits: 1 }}
+        options={{ maximumFractionDigits: 2 }}
       />
       <NumberField
         source="md"
-        options={{ maximumFractionDigits: 1 }}
+        options={{ maximumFractionDigits: 2 }}
       />
       <DateField
         source="created_at"
@@ -67,4 +73,60 @@ export const RuleShow = () => (
       />
     </SimpleShowLayout>
   </Show>
+)
+
+export const RuleCreate = () => (
+  <Create>
+    <SimpleForm>
+      <TextInput source="kode" />
+      <ReferenceInput
+        source="kerusakan_id"
+        reference="kerusakan"
+      />
+      <ReferenceInput
+        source="gejala_id"
+        reference="gejala"
+      />
+      <NumberInput
+        source="mb"
+        min={0}
+        max={1}
+        step={0.2}
+      />
+      <NumberInput
+        source="md"
+        min={0}
+        max={1}
+        step={0.2}
+      />
+    </SimpleForm>
+  </Create>
+)
+
+export const RuleEdit = () => (
+  <Edit>
+    <SimpleForm>
+      <TextInput source="kode" />
+      <ReferenceInput
+        source="kerusakan_id"
+        reference="kerusakan"
+      />
+      <ReferenceInput
+        source="gejala_id"
+        reference="gejala"
+      />
+      <NumberInput
+        source="mb"
+        min={0}
+        max={1}
+        step={0.2}
+      />
+      <NumberInput
+        source="md"
+        min={0}
+        max={1}
+        step={0.2}
+      />
+    </SimpleForm>
+  </Edit>
 )

@@ -5,64 +5,56 @@ namespace App\Http\Controllers;
 use App\Models\Konsultasi;
 use App\Models\Rule;
 use App\Models\GejalaKonsultasi;
+use App\Models\Diagnosa;
 use App\Http\Requests\StoreKonsultasiRequest;
 use App\Http\Requests\UpdateKonsultasiRequest;
 use App\Http\Resources\KonsultasiResource;
 use App\Http\Resources\KonsultasiCollection;
+use App\Http\Resources\DiagnosaCollection;
 use Illuminate\Http\Request;
 
 class KonsultasiController extends Controller
 {
-    public function calculateCf(Konsultasi $konsultasi)
+    public function diagnosa(Konsultasi $konsultasi)
     {
         $gejalaIds = GejalaKonsultasi::where('konsultasi_id', $konsultasi->id)->get()->pluck('gejala_id');
-        $kerusakans = Rule::select('kerusakan_id')
+        $diagnosa = Rule::select('kerusakan_id')
             ->groupBy('kerusakan_id')
             ->get()
-            ->map(function (Rule $item) {
-                $item['rules'] = Rule::select(['gejala_id', 'mb', 'md'])
-                    ->where('kerusakan_id', $item['kerusakan_id'])
+            ->map(function (Rule $kerusakan) {
+                $kerusakan['rules'] = Rule::select(['gejala_id', 'mb', 'md'])
+                    ->where('kerusakan_id', $kerusakan['kerusakan_id'])
                     ->get();
-                return $item;
+                return $kerusakan;
             })
-            ->filter(function (Rule $item) use ($gejalaIds) {
+            ->filter(function (Rule $kerusakan) use ($gejalaIds) {
                 return count(
-                    $item['rules']->pluck('gejala_id')->intersect($gejalaIds)
-                ) === count(
-                    $item['rules']->pluck('gejala_id')
+                    $kerusakan['rules']->pluck('gejala_id')->intersect($gejalaIds)
+                ) > 0;
+            })
+            ->map(function (Rule $kerusakan) use ($gejalaIds, $konsultasi) {
+                $results = $kerusakan['rules']
+                    ->filter(function (Rule $rule) use ($gejalaIds) {
+                        return $gejalaIds->contains($rule['gejala_id']);
+                    })
+                    ->values()
+                    ->reduce(function ($carry, Rule $rule, int $key) {
+                        if ($key === 0) {
+                            return [$rule['mb'], $rule['md'], $rule['mb'] - $rule['md']];
+                        } else {
+                            $newMb = $carry[0] + $rule['mb'] * (1 - $carry[0]);
+                            $newMd = $carry[1] + $rule['md'] * (1 - $carry[1]);
+                            return [$newMb, $newMd, $newMb - $newMd];
+                        }
+                    }, [0, 0, 0]);
+
+                return Diagnosa::updateOrCreate(
+                    ['konsultasi_id' => $konsultasi->id, 'kerusakan_id' => $kerusakan->kerusakan_id],
+                    ['cf' => round($results[2], 2)]
                 );
-            })
-            ->map(function (Rule $item) {
-                $results = $item['rules']->reduce(function ($carry, Rule $rule, int $key) use ($item) {
-                    if ($key == 0) {
-                        return [$rule['mb'], $rule['md'], $carry[2]];
-                    } else {
-                        $newMb = $carry[0] + $rule['mb'] * (1 - $carry[0]);
-                        $newMd = $carry[1] + $rule['md'] * (1 - $carry[1]);
-                        return [$newMb, $newMd, $newMb - $newMd];
-                    }
-                }, [0, 0, 0]);
-                $item['cf'] = round($results[2], 2);
-                return $item;
-            })
-            ->sortByDesc('cf')
-            ->values();
+            });
 
-        if (array_key_exists(0, $kerusakans->toArray())) {
-            $konsultasi->fill([
-                'kerusakan_id' => $kerusakans[0]->kerusakan_id,
-                'cf' => $kerusakans[0]->cf,
-            ]); 
-        } else {
-            $konsultasi->fill([
-                'kerusakan_id' => null,
-                'cf' => 0,
-            ]);
-        }
-
-        $konsultasi->save();
-
-        return new KonsultasiResource($konsultasi);
+        return new DiagnosaCollection($diagnosa);
     }
 
     /**
@@ -112,49 +104,42 @@ class KonsultasiController extends Controller
                 )
             );
             $gejalaIds = $request->input('gejala_ids');
-            $kerusakans = Rule::select('kerusakan_id')
-                ->groupBy('kerusakan_id')
-                ->get()
-                ->map(function (Rule $item) {
-                    $item['rules'] = Rule::select(['gejala_id', 'mb', 'md'])
-                        ->where('kerusakan_id', $item['kerusakan_id'])
-                        ->get();
-                    return $item;
-                })
-                ->filter(function (Rule $item) use ($gejalaIds) {
-                    return count(
-                        $item['rules']->pluck('gejala_id')->intersect($gejalaIds)
-                    ) === count(
-                        $item['rules']->pluck('gejala_id')
-                    );
-                })
-                ->map(function (Rule $item) {
-                    $results = $item['rules']->reduce(function ($carry, Rule $rule, int $key) use ($item) {
-                        if ($key == 0) {
-                            return [$rule['mb'], $rule['md'], $carry[2]];
+            $gejalaIds = GejalaKonsultasi::where('konsultasi_id', $konsultasi->id)->get()->pluck('gejala_id');
+            $diagnosa = Rule::select('kerusakan_id')
+            ->groupBy('kerusakan_id')
+            ->get()
+            ->map(function (Rule $kerusakan) {
+                $kerusakan['rules'] = Rule::select(['gejala_id', 'mb', 'md'])
+                    ->where('kerusakan_id', $kerusakan['kerusakan_id'])
+                    ->get();
+                return $kerusakan;
+            })
+            ->filter(function (Rule $kerusakan) use ($gejalaIds) {
+                return count(
+                    $kerusakan['rules']->pluck('gejala_id')->intersect($gejalaIds)
+                ) > 0;
+            })
+            ->map(function (Rule $kerusakan) use ($gejalaIds, $konsultasi) {
+                $results = $kerusakan['rules']
+                    ->filter(function (Rule $rule) use ($gejalaIds) {
+                        return $gejalaIds->contains($rule['gejala_id']);
+                    })
+                    ->values()
+                    ->reduce(function ($carry, Rule $rule, int $key) {
+                        if ($key === 0) {
+                            return [$rule['mb'], $rule['md'], $rule['mb'] - $rule['md']];
                         } else {
                             $newMb = $carry[0] + $rule['mb'] * (1 - $carry[0]);
                             $newMd = $carry[1] + $rule['md'] * (1 - $carry[1]);
                             return [$newMb, $newMd, $newMb - $newMd];
                         }
                     }, [0, 0, 0]);
-                    $item['cf'] = round($results[2], 2);
-                    return $item;
-                })
-                ->sortByDesc('cf')
-                ->values();
 
-            if (array_key_exists(0, $kerusakans->toArray())) {
-                $konsultasi->fill([
-                    'kerusakan_id' => $kerusakans[0]->kerusakan_id,
-                    'cf' => $kerusakans[0]->cf,
-                ]); 
-            } else {
-                $konsultasi->fill([
-                    'kerusakan_id' => null,
-                    'cf' => 0,
-                ]);
-            }
+                return Diagnosa::updateOrCreate(
+                    ['konsultasi_id' => $konsultasi->id, 'kerusakan_id' => $kerusakan->kerusakan_id],
+                    ['cf' => round($results[2], 2)]
+                );
+            });
 
             $konsultasi->save();
         };

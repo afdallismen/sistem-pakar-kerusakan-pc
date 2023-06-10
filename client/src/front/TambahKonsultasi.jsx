@@ -3,6 +3,7 @@ import {
   useEffect,
   useContext,
 } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import FormControl from '@mui/material/FormControl'
@@ -23,6 +24,7 @@ import {
 import UserContext from './UserContext'
 
 const TambahKonsultasi = () => {
+  const navigate = useNavigate()
   const { user } = useContext(UserContext)
   const [dataGejala, setDataGejala] = useState([])
   const [isLoading, setIsLoading] = useState(false)
@@ -59,12 +61,12 @@ const TambahKonsultasi = () => {
   const handleSubmit = async (evt) => {
     evt.preventDefault()
     try {
-      const res = await axios.post('/api/konsultasi', {
+      await axios.post('/api/konsultasi', {
         deskripsi,
         gejala_ids: selectedGejalaIds,
         pelanggan_id: user?.id
       })
-      console.log(res.data.data)
+      navigate('/konsultasi')
     } catch (error) {
       console.error(error)
     }

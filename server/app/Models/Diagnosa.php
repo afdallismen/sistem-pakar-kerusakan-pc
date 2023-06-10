@@ -5,25 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Gejala;
 use App\Models\Konsultasi;
+use App\Models\Kerusakan;
 
-class GejalaKonsultasi extends Model
+class Diagnosa extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'konsultasi_id',
-        'gejala_id',
+        'kerusakan_id',
+        'cf',
     ];
-
-    public function gejala(): BelongsTo
-    {
-        return $this->belongsTo(Gejala::class);
-    }
 
     public function konsultasi(): BelongsTo
     {
         return $this->belongsTo(Konsultasi::class);
+    }
+
+    public function kerusakan(): BelongsTo
+    {
+        return $this->belongsTo(Kerusakan::class);
     }
 }

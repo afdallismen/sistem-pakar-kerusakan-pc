@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SolusiKerusakan>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Diagnosa>
  */
-class SolusiKerusakanFactory extends Factory
+class DiagnosaFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,7 +17,7 @@ class SolusiKerusakanFactory extends Factory
     public function definition(): array
     {
         return [
-            'deskripsi' => fake()->text(),
+            //
         ];
     }
 }
