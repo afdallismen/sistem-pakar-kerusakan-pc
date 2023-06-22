@@ -13,6 +13,7 @@ import {
 import {
   TextInput,
 } from 'react-admin'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export const LoginForm = (props) => {
     const { redirectTo, className } = props;
@@ -92,6 +93,17 @@ export const LoginForm = (props) => {
                     ) : (
                         translate('ra.auth.sign_in')
                     )}
+                </Button>           
+                <Button
+                    type="link"
+                    href="/"
+                    startIcon={<ArrowBackIcon />}
+                    sx={{
+                        textTransform: 'none',
+                    }}
+                    fullWidth
+                >
+                    Kembali
                 </Button>
             </CardContent>
         </StyledForm>

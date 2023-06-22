@@ -30,7 +30,7 @@ return new class extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('set null');
             $table
-                ->float('cf', 1, 2)
+                ->float('cf', 2, 2)
                 ->default(0);
             $table->timestamps();
         });

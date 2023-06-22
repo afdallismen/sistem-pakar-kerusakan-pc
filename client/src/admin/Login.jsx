@@ -64,6 +64,7 @@ export const Login = (props) => {
             lazyLoadBackgroundImage();
         }
     });
+
     return (
         <Root {...rest} ref={containerRef}>
             <Card className={LoginClasses.card}>

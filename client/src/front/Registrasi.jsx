@@ -7,6 +7,7 @@ import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import FormLabel from '@mui/material/FormLabel'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import UserContext from './UserContext'
 import { instance as axios } from '../admin/lib/axios'
@@ -45,10 +46,26 @@ const Registrasi = () => {
     }
   }
 
+  const handleClickKembali = () => {
+    navigate(-1);
+  }
+
   return (
     <Stack
       alignItems="center"
     >
+      <div style={{ width: '480px', marginBottom: '16px' }}>
+        <Button
+          type="link"
+          startIcon={<ArrowBackIcon />}
+          onClick={handleClickKembali}
+          sx={{
+            textTransform: 'none',
+          }}
+        >
+          Kembali
+        </Button>
+      </div>
       <Stack
         gap={3}
         width="480px"

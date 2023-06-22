@@ -20,7 +20,7 @@ const Home = () => {
         variant="h6"
         letterSpacing="0.05em"
       >
-        Sistem pakar perbaikan PC adalah sebuah sistem komputer yang dirancang untuk memberikan solusi dan rekomendasi dalam memperbaiki masalah yang terkait dengan PC atau komputer.
+        Sistem pakar kerusakan PC adalah sebuah sistem komputer yang dirancang untuk memberikan solusi dan rekomendasi dalam memperbaiki masalah yang terkait dengan PC atau komputer.
       </Typography>
       {!user && (
         <Stack

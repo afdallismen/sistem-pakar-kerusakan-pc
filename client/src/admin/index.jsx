@@ -6,7 +6,7 @@ import indonesianMessages from 'ra-language-indonesian-new'
 import polyglotI18nProvider from 'ra-i18n-polyglot'
 
 import dataProvider from './lib/dataProvider'
-import { GejalaCreate, GejalaList, GejalaShow } from './resources/Gejala'
+import { GejalaCreate, GejalaEdit, GejalaList, GejalaShow } from './resources/Gejala'
 import { KerusakanCreate, KerusakanEdit, KerusakanList, KerusakanShow } from './resources/Kerusakan'
 import { RuleCreate, RuleEdit, RuleList, RuleShow } from './resources/Rule'
 import { PelangganList, PelangganShow } from './resources/Pelanggan'
@@ -14,11 +14,13 @@ import { KonsultasiList, KonsultasiShow } from './resources/Konsultasi'
 import { DiagnosaList, DiagnosaShow } from './resources/Diagnosa'
 import authProvider from './lib/authProvider'
 import { Login } from './login'
+import Dashboard from './Dashboard'
 
 const i18nProvider = polyglotI18nProvider(() => indonesianMessages, 'id')
 
 const Admin = () => (
   <RaAdmin
+    dashboard={Dashboard}
     basename="/admin"
     loginPage={<Login />}
     authProvider={authProvider}
@@ -30,6 +32,7 @@ const Admin = () => (
       list={GejalaList}
       show={GejalaShow}
       create={GejalaCreate}
+      edit={GejalaEdit}
       options={{
         label: 'Gejala',
       }}

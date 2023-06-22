@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('kode');
             $table
-                ->float('mb', 1, 2)
+                ->float('mb', 2, 2)
                 ->default(0);
             $table
-                ->float('md', 1, 2)
+                ->float('md', 2, 2)
                 ->default(0);
             $table->unsignedBigInteger('kerusakan_id');
             $table
