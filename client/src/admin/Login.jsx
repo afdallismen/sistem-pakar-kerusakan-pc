@@ -36,7 +36,7 @@ export const Login = (props) => {
         checkAuth({}, false)
             .then(() => {
                 // already authenticated, redirect to the home page
-                navigate('/');
+                navigate('/admin');
             })
             .catch(() => {
                 // not authenticated, stay on the login page
