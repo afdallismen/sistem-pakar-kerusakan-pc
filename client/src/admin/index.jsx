@@ -15,11 +15,13 @@ import { DiagnosaList, DiagnosaShow } from './resources/Diagnosa'
 import authProvider from './lib/authProvider'
 import { Login } from './login'
 import Dashboard from './Dashboard'
+import Layout from './Layout'
 
 const i18nProvider = polyglotI18nProvider(() => indonesianMessages, 'id')
 
 const Admin = () => (
   <RaAdmin
+    layout={Layout}
     dashboard={Dashboard}
     basename="/admin"
     loginPage={<Login />}
@@ -61,21 +63,21 @@ const Admin = () => (
       recordRepresentation="kode"
     />
     <Resource
-      name="pelanggan"
-      list={PelangganList}
-      show={PelangganShow}
-      options={{
-        label: 'Pelanggan',
-      }}
-      recordRepresentation="nama"
-    />
-    <Resource
       name="diagnosa"
       list={DiagnosaList}
       show={DiagnosaShow}
       options={{
         label: 'Diagnosa',
       }}
+    />
+    <Resource
+      name="pelanggan"
+      list={PelangganList}
+      show={PelangganShow}
+      options={{
+        label: 'Laporan Pelanggan',
+      }}
+      recordRepresentation="nama"
     />
     <Resource
       name="konsultasi"

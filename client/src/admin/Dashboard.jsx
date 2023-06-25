@@ -10,20 +10,7 @@ const Dashboard = () => (
       width: '640px',
     }}
   >
-    <Title title="Dasbor" />
-    <CardContent>
-      <Typography
-        variant="h5"
-        gutterBottom
-      >
-        Diagnosa Kerusakan PC
-      </Typography>
-      <Typography
-        textAlign="justify"
-      >
-        Sistem pakar kerusakan PC adalah sebuah sistem komputer yang dirancang untuk memberikan solusi dan rekomendasi dalam memperbaiki masalah yang terkait dengan PC atau komputer.
-      </Typography>
-    </CardContent>
+    <Title title="Sistem Pakar Kerusakan PC" />
   </Card>
 )
 
