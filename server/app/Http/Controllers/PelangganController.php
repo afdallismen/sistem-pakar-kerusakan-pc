@@ -8,6 +8,7 @@ use App\Http\Requests\UpdatePelangganRequest;
 use App\Http\Resources\PelangganResource;
 use App\Http\Resources\PelangganCollection;
 use Illuminate\Http\Request;
+use Barryvdh\Snappy\Facades\SnappyPdf;
 
 class PelangganController extends Controller
 {
@@ -77,5 +78,13 @@ class PelangganController extends Controller
         $ids = $request->query('ids');
         Pelanggan::destroy($ids);
         return ['data' => explode(',', $ids)];
+    }
+
+    public function report()
+    {
+        $pelanggans = Pelanggan::orderBy('nama', 'asc')->get();
+        $pdf = SnappyPdf::loadView('report_pelanggan', ['pelanggans' => $pelanggans]);
+        return $pdf->download('laporan_pelanggan_'.time().'.pdf');
+        // return view('report_pelanggan', ['pelanggans' => $pelanggans]);
     }
 }

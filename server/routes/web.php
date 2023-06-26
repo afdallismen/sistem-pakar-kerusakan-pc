@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use App\Http\Controllers\PelangganController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +18,5 @@ use Illuminate\Http\Request;
 Route::get('/', function () {
     return response()->json(['status' => 'ok'], 200);
 });
+
+Route::get('/laporan/laporan-pelanggan', [PelangganController::class, 'report']);

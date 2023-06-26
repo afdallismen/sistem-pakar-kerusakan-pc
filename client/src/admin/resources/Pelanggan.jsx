@@ -5,10 +5,24 @@ import {
   DateField,
   Show,
   SimpleShowLayout,
+  Button,
+  TopToolbar,
 } from 'react-admin'
+import FileDownloadIcon from '@mui/icons-material/FileDownload'
+
+const ListActions = () => (
+  <TopToolbar>
+    <Button
+      href="http://localhost:8000/laporan/laporan-pelanggan"
+      label="Ekspor"
+    >
+      <FileDownloadIcon />
+    </Button>
+  </TopToolbar>
+)
 
 export const PelangganList = () => (
-  <List>
+  <List actions={<ListActions />}>
     <Datagrid rowClick="show">
       <TextField source="nama" />
       <TextField source="nohp" />
