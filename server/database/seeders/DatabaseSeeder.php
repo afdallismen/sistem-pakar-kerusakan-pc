@@ -12,6 +12,7 @@ use App\Models\Konsultasi;
 use App\Models\GejalaKonsultasi;
 use App\Models\Pelanggan;
 use App\Models\User;
+use App\Models\Diagnosa;
 
 class DatabaseSeeder extends Seeder
 {
@@ -398,36 +399,103 @@ class DatabaseSeeder extends Seeder
             'gejala_id' => Gejala::where('kode', 'G28')->first()->id,
         ]);
 
-        Pelanggan::create([
-            'nama' => fake()->name(),
-            'nohp' => fake()->numerify('08##########'),
-            'alamat' => fake()->text(),
-        ]);
+        $pelanggan = [
+            Pelanggan::create([
+                'nama' => fake()->name(),
+                'nohp' => fake()->numerify('08##########'),
+                'alamat' => fake()->text(),
+            ]),
+            Pelanggan::create([
+                'nama' => fake()->name(),
+                'nohp' => fake()->numerify('08##########'),
+                'alamat' => fake()->text(),
+            ]),
+            Pelanggan::create([
+                'nama' => fake()->name(),
+                'nohp' => fake()->numerify('08##########'),
+                'alamat' => fake()->text(),
+            ]),
+        ];
 
-        Konsultasi::create([
-            'pelanggan_id' => Pelanggan::first()->id,
-            'deskripsi' => fake()->text(),
-        ]);
+        $konsultasi = [
+            Konsultasi::create([
+                'pelanggan_id' => $pelanggan[0]->id,
+                'deskripsi' => fake()->text(),
+            ]),
+            Konsultasi::create([
+                'pelanggan_id' => $pelanggan[1]->id,
+                'deskripsi' => fake()->text(),
+            ]),
+            Konsultasi::create([
+                'pelanggan_id' => $pelanggan[2]->id,
+                'deskripsi' => fake()->text(),
+            ]),
+        ];
 
         GejalaKonsultasi::create([
-            'konsultasi_id' => Konsultasi::first()->id,
+            'konsultasi_id' => $konsultasi[0]->id,
             'gejala_id' => Gejala::where('kode', 'G01')->first()->id,
         ]);
         GejalaKonsultasi::create([
-            'konsultasi_id' => Konsultasi::first()->id,
+            'konsultasi_id' => $konsultasi[0]->id,
             'gejala_id' => Gejala::where('kode', 'G02')->first()->id,
         ]);
         GejalaKonsultasi::create([
-            'konsultasi_id' => Konsultasi::first()->id,
+            'konsultasi_id' => $konsultasi[1]->id,
             'gejala_id' => Gejala::where('kode', 'G03')->first()->id,
         ]);
         GejalaKonsultasi::create([
-            'konsultasi_id' => Konsultasi::first()->id,
+            'konsultasi_id' => $konsultasi[1]->id,
             'gejala_id' => Gejala::where('kode', 'G04')->first()->id,
         ]);
         GejalaKonsultasi::create([
-            'konsultasi_id' => Konsultasi::first()->id,
+            'konsultasi_id' => $konsultasi[2]->id,
             'gejala_id' => Gejala::where('kode', 'G10')->first()->id,
         ]);
+
+        $diagnosa = [
+            $this->createDiagnosa($konsultasi[0]),
+            $this->createDiagnosa($konsultasi[1]),
+            $this->createDiagnosa($konsultasi[2]),
+        ];
+    }
+
+    public function createDiagnosa(Konsultasi $konsultasi) {
+        $gejalaIds = GejalaKonsultasi::where('konsultasi_id', $konsultasi->id)->get()->pluck('gejala_id');
+        $diagnosa = Rule::select('kerusakan_id')
+        ->groupBy('kerusakan_id')
+        ->get()
+        ->map(function (Rule $kerusakan) {
+            $kerusakan['rules'] = Rule::select(['gejala_id', 'mb', 'md'])
+                ->where('kerusakan_id', $kerusakan['kerusakan_id'])
+                ->get();
+            return $kerusakan;
+        })
+        ->filter(function (Rule $kerusakan) use ($gejalaIds) {
+            return count(
+                $kerusakan['rules']->pluck('gejala_id')->intersect($gejalaIds)
+            ) > 0;
+        })
+        ->map(function (Rule $kerusakan) use ($gejalaIds, $konsultasi) {
+            $results = $kerusakan['rules']
+                ->filter(function (Rule $rule) use ($gejalaIds) {
+                    return $gejalaIds->contains($rule['gejala_id']);
+                })
+                ->values()
+                ->reduce(function ($carry, Rule $rule, int $key) {
+                    if ($key === 0) {
+                        return [$rule['mb'], $rule['md'], $rule['mb'] - $rule['md']];
+                    } else {
+                        $newMb = $carry[0] + $rule['mb'] * (1 - $carry[0]);
+                        $newMd = $carry[1] + $rule['md'] * (1 - $carry[1]);
+                        return [$newMb, $newMd, $newMb - $newMd];
+                    }
+                }, [0, 0, 0]);
+
+            return Diagnosa::updateOrCreate(
+                ['konsultasi_id' => $konsultasi->id, 'kerusakan_id' => $kerusakan->kerusakan_id],
+                ['cf' => round($results[2], 2)]
+            );
+        });
     }
 }

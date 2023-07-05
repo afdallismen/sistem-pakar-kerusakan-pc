@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\PelangganController;
+use App\Http\Controllers\KonsultasiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +21,4 @@ Route::get('/', function () {
 });
 
 Route::get('/laporan/laporan-pelanggan', [PelangganController::class, 'report']);
+Route::get('/laporan/laporan-konsultasi', [KonsultasiController::class, 'report']);

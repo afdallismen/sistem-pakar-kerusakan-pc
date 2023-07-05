@@ -12,7 +12,21 @@ import {
   ChipField,
   RichTextField,
   NumberField,
+  TopToolbar,
+  Button,
 } from 'react-admin'
+import FileDownloadIcon from '@mui/icons-material/FileDownload'
+
+const ListActions = () => (
+  <TopToolbar>
+    <Button
+      href="http://localhost:8000/laporan/laporan-konsultasi"
+      label="Ekspor"
+    >
+      <FileDownloadIcon />
+    </Button>
+  </TopToolbar>
+)
 
 export const KonsultasiList = () => {
   const sortHighestCf = (a, b) => b.cf - a.cf;
@@ -33,7 +47,7 @@ export const KonsultasiList = () => {
   }
 
   return (
-    <List>
+    <List actions={<ListActions />}>
       <Datagrid rowClick="show">
         <ReferenceField
           source="pelanggan_id"

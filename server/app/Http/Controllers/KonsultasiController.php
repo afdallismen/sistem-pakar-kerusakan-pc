@@ -12,6 +12,7 @@ use App\Http\Resources\KonsultasiResource;
 use App\Http\Resources\KonsultasiCollection;
 use App\Http\Resources\DiagnosaCollection;
 use Illuminate\Http\Request;
+use Barryvdh\Snappy\Facades\SnappyPdf;
 
 class KonsultasiController extends Controller
 {
@@ -179,5 +180,25 @@ class KonsultasiController extends Controller
         $ids = $request->query('ids');
         Konsultasi::destroy($ids);
         return ['data' => explode(',', $ids)];
+    }
+
+    public function report()
+    {
+        setlocale(LC_TIME, 'id_ID');
+        $konsultasis = Konsultasi::with('diagnosas.kerusakan', 'pelanggan', 'gejala_konsultasis.gejala')
+            ->get()
+            ->sortBy('created_at')
+            ->reduce(function ($carry, $konsultasi) {
+                $month = date('M Y',strtotime($konsultasi->created_at));
+                if (!array_key_exists($month, $carry)) {
+                    $carry[$month] = [$konsultasi];
+                } else {
+                    array_push($carry[$month], $konsultasi);
+                }
+                return $carry;
+            }, []);
+        $pdf = SnappyPdf::loadView('report_konsultasi', ['konsultasis' => $konsultasis]);
+        return $pdf->download('laporan_konsultasi_'.time().'.pdf');
+        // return view('report_konsultasi', ['konsultasis' => $konsultasis]);
     }
 }
